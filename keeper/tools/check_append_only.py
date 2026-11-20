@@ -8,6 +8,7 @@ renamed. Adding new lines and new files is always fine.
 
 Usage:
     python3 keeper/tools/check_append_only.py            # origin/main vs working tree
+    python3 keeper/tools/check_append_only.py BASE       # BASE vs working tree
     python3 keeper/tools/check_append_only.py BASE HEAD  # two commits
 """
 import subprocess
@@ -23,8 +24,8 @@ def git(*args):
 
 
 def main():
-    if len(sys.argv) == 3:
-        rev_args = [sys.argv[1], sys.argv[2]]
+    if len(sys.argv) in (2, 3):
+        rev_args = sys.argv[1:]  # BASE [HEAD]; no HEAD means the working tree
     elif len(sys.argv) == 1:
         rev_args = ["origin/main"]
     else:
