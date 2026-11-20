@@ -1,0 +1,20 @@
+name: Keeper journal is append-only
+
+on:
+  push:
+    paths: ["keeper/journal/**", "keeper/inbox/**"]
+  pull_request:
+    paths: ["keeper/journal/**", "keeper/inbox/**"]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: No journal line removed or changed
+        env:
+          BASE: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+          HEAD: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+        run: python3 keeper/tools/check_append_only.py "$BASE" "$HEAD"
