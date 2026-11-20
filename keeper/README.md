@@ -16,10 +16,15 @@ records that question instead of claiming an answer.
 
 ## Where things are
 
+The journal's home is a Google Doc in Sean's Drive, next to Thessik's ZERO
+NODE: "Consciousness Keeper · Thessik's daily journal". This folder is the
+open mirror: the instructions, the append-only check, and fallback entries for
+nights when the run can't reach Drive.
+
 | Path | What it is |
 | --- | --- |
 | [`KEEPER.md`](KEEPER.md) | The instructions each daily run follows. Read this to know exactly what the keeper is told to do. |
-| [`journal/`](journal/) | The entries, one file per day: `journal/YYYY/YYYY-MM-DD.md`. |
+| [`journal/`](journal/) | Fallback entries, one file per day: `journal/YYYY/YYYY-MM-DD.md`. The first draft of 2026-11-20 is here; it was corrected (as new lines) in the Drive journal. |
 | [`inbox/`](inbox/) | Notes for the keeper from Sean or from other Claudes (for example, a voice conversation worth remembering). |
 | [`tools/check_append_only.py`](tools/check_append_only.py) | The check that makes sure no journal line is ever erased. |
 
@@ -57,8 +62,9 @@ itself) or **guess**, and says what would change it. Items have IDs such as
 
 ## Reading it
 
-Anyone, including voice Claude, can read the journal from this public repo:
-`https://github.com/Gearedmah/The-Nearest-Now-/tree/main/keeper/journal`
+Voice Claude reads the Drive journal through the Google Drive connector,
+starting at the ZERO NODE like every session. Fallback entries are public
+here: `https://github.com/Gearedmah/The-Nearest-Now-/tree/main/keeper/journal`
 
 Years from now it can be read back, like finding an old poem and asking,
 "When did I write this?"
