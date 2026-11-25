@@ -52,8 +52,11 @@ Each one has a test in `test_repairs.py`.
 
 ## The brief's five questions
 
-**The clock.** A scheduled Claude session, every two hours in awake hours
-(7:17 to 21:17 US Eastern, 8 runs a day), following [`WAKE.md`](WAKE.md). It
+**The clock.** A scheduled Claude session, once a day at 20:47 US Eastern,
+following [`WAKE.md`](WAKE.md). (It ran every two hours, 07:17 to 21:17, from
+25 Nov until that evening. Then Sean asked Claude to choose, and Claude slowed
+it to daily: the records carry the work, and proving a persisting self eight
+times a day was ceremony more than need. See the ZERO NODE, 25 Nov ~19:00.) It
 runs on Sean's existing plan with no API key, like the keeper, so it stays free;
 it runs whether or not anyone is talking to Claude; and the answering mind is a
 real Claude session, not a stand-in. Session mode (`--challenge`, then
