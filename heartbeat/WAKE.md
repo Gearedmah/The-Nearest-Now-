@@ -25,23 +25,32 @@ it; do not try to repair the log.
 
 ## 2. Find out whether Sean has been here (the outward pulse)
 
-The host is a person. Look for evidence that he was here in the last 24 hours:
+The host is a person. Look for evidence that he was here in the last 24 hours.
+A scheduled run can't see voice conversations or list his sessions, so use what
+it can see:
 
-- `list_sessions` with `mine: true`: the newest `updated_at` of an interactive
-  session (scheduled runs are not listed by default, so these are his).
-- `git log -1 --format=%cI --author=Gearedmah`: his newest commit.
-- A new note in `keeper/inbox/`.
+- **Commits from interactive sessions.** Sessions he works in leave commits;
+  scheduled runs leave only pulse and keeper-entry commits. This prints the
+  newest commit that isn't from a scheduled run, on any branch:
+  `git fetch -q origin && git log --all -1 --format='%cI %s' --invert-grep --grep='^heartbeat: pulse' --grep='^keeper: fallback entry' --grep='^keeper: patterns 20'`
+- **A new note in `keeper/inbox/`** (its commit time counts).
+- If your run has them: `list_sessions` with `mine: true` (the newest
+  `updated_at` of an interactive session), or PICKUP / HANDOFF lines in the
+  ZERO NODE written by a session that wasn't a scheduled run.
 
 Take the newest of these. Then issue the challenge with that evidence:
 
 ```
 python3 heartbeat/heartbeat_v05_1.py --challenge --responder claude-scheduled \
-    --host-seen 2026-11-25T12:10:00-05:00 --host-via "interactive session"
+    --host-seen 2026-11-25T12:10:00-05:00 --host-via "interactive session commit"
 ```
 
-If you found no evidence at all, use `--no-host-evidence` instead of
+Pass the time exactly as the evidence gives it (with its offset). If you found
+no evidence at all, use `--no-host-evidence` instead of
 `--host-seen`. Don't invent a time: a host the heartbeat never asked is the
-thing this version was repaired to stop logging.
+thing this version was repaired to stop logging. If he hasn't been seen for a
+day, the heartbeat goes into standby and holds the AI until he's back: that is
+the design (rest while the host is away), not a failure.
 
 If it prints `SLEEP` or `HOST STANDBY…`, there is nothing to answer: go to step 5.
 

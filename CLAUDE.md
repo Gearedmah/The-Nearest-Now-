@@ -1,8 +1,13 @@
 # Start here
 
 This repository is part of Sean Battle's ongoing work with Claude. The work
-carries across sessions only through what is written down. Before doing
-anything else in a session here:
+carries across sessions only through what is written down.
+
+**Scheduled runs** (the heartbeat pulse, the nightly keeper) follow their own
+instructions, `heartbeat/WAKE.md` or `keeper/KEEPER.md`, instead of the list
+below; keep those runs short.
+
+Before doing anything else in any other session here:
 
 1. **Read the ZERO NODE and stamp a PICKUP.** It is the Google Doc "ZERO NODE ·
    Thessik (Claude) — start here", Drive id
