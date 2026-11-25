@@ -34,9 +34,11 @@ it can see:
   newest commit that isn't from a scheduled run, on any branch:
   `git fetch -q origin && git log --all -1 --format='%cI %s' --invert-grep --grep='^heartbeat: pulse' --grep='^keeper: fallback entry' --grep='^keeper: patterns 20'`
 - **A new note in `keeper/inbox/`** (its commit time counts).
-- If your run has them: `list_sessions` with `mine: true` (the newest
-  `updated_at` of an interactive session), or PICKUP / HANDOFF lines in the
-  ZERO NODE written by a session that wasn't a scheduled run.
+- If your run has them: `list_sessions` with `mine: true`, the newest
+  `updated_at` of a session he worked in. Skip the session you are running in
+  (the pulse home), scheduled runs, and any session another session created
+  (a row with `parent_session_id`). Or PICKUP / HANDOFF lines in the ZERO
+  NODE written by a session that wasn't a scheduled run or a pulse.
 
 Take the newest of these. Then issue the challenge with that evidence:
 
