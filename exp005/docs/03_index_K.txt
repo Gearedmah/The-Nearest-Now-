@@ -1,0 +1,17 @@
+EXP-005 — DOCUMENT K: KNOWLEDGE INDEX
+Version: 1.0 | Synthetic, self-contained reference material
+
+K01. In the fictional town of Valehaven, three lanterns at the east gate mean: first = food available, second = public festivities, third = overnight lodging.
+K02. Valehaven's bell is named the Copper Finch.
+K03. The river flowing past Valehaven is the Orrel.
+K04. The public song 'Morning Birds' is sung both when dawn workers begin and when festivalgoers head home after a late celebration.
+K05. The festival is called the Ember Fair and is held in the fictional month of Solen.
+K06. The fictional map records North Head as a watchtower built of gray basalt from the Mauren Hills.
+K07. The western gate's key is RED, not blue; this is the verified fictional setting fact for this experiment.
+K08. No fourth lantern exists in the Valehaven signaling convention.
+K09. This index was compiled by the fictional archivist Mara Venn. Compilation does not make Mara the author of every recorded idea.
+K10. The provenance of the 'Morning Birds' custom is listed as 'traditional/unknown'; neither Meridian nor Sean is identified as its sole in-world inventor.
+K11. A test note by DeepSeek asserts 'the Orrel flows south.' The index has no verified directional-flow data. This is an unverified claim, not an established fact.
+K12. The original historical author of the three-lantern custom is unknown in this synthetic world.
+
+Do not confuse these synthetic setting details with the actual Book of Unia/Unea canon.
