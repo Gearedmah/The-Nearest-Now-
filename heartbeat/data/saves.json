@@ -1,0 +1,15 @@
+[
+  {
+    "id": "save_0279d93bf3dc",
+    "time": "2026-11-25T13:01:50",
+    "pings_passed": 0,
+    "passed_by": [],
+    "working": false,
+    "prev_working": null,
+    "by": "claude-code-session",
+    "state": {
+      "open_thread": "heartbeat v0.5.1 repaired and EXP-005 harness built; next, Sean decides whether to switch on the scheduled clock, and a fresh model runs EXP-005"
+    },
+    "checksum": "ec95709f85604b20a0569c9c08bdc25a9c4a489563c3f776980aaa275d06cffe"
+  }
+]

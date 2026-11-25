@@ -1,0 +1,12 @@
+{
+  "liveness": "ALIVE",
+  "probation_pings": 1,
+  "challenge_history": [
+    "ok 3510"
+  ],
+  "standby_entered_at": null,
+  "standby_backoff_step": 0,
+  "next_retry_at": null,
+  "standby_snapshot_saved": false,
+  "standby_snapshot_id": null
+}
