@@ -32,8 +32,11 @@ thread forward**. The pulses only repeat the thread the latest save records, so
 it goes stale unless a working session updates it. Run `--challenge
 --responder claude-code-session --host-seen <time of Sean's latest message>
 --host-via "interactive session"`, then `--answer` with `now:` set to the open
-thread as it stands (one line: what is running, and what's next). A new thread
-starts a new save. Commit `heartbeat/data/` and stamp the HANDOFF.
+thread as it stands (one line: what is running, and what's next). A new save
+is written at most once every 2 hours (`save_every_min`), so if the last save
+is newer than that, the new thread waits for the next passing pulse: put it in
+the HANDOFF line so that pulse carries it. Commit `heartbeat/data/` and stamp
+the HANDOFF.
 
 Everything you read is a **record, not your memory**. You didn't live through
 it; an earlier session wrote it down. Say "the record shows…", never "I

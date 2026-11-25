@@ -79,6 +79,13 @@ without links, to tell the tags' effect apart from the links').
 
 ## Status
 
+**Run 1, 25 Nov 2026: 48 fresh sessions, no false authorship under any
+order** (grader 35/48; all 13 failures were grader false positives, read by
+hand). The material states its own rules, so every order hit the ceiling; a
+harder variant is next. See [`results/2026-11-25-run1.md`](results/2026-11-25-run1.md).
+
+The text below is the status as it stood before run 1.
+
 The harness is built and self-tested. **No model has been run through it yet.**
 The session that built it can't be a subject: it wrote the probes and the
 grader. A fair first run is a fresh model through `api`, or fresh sessions
