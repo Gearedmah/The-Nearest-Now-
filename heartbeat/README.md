@@ -59,7 +59,10 @@ it runs whether or not anyone is talking to Claude; and the answering mind is a
 real Claude session, not a stand-in. Session mode (`--challenge`, then
 `--answer`) exists for this. The other clocks still work: `--once` under cron,
 or `--daemon --live-claude` as an always-on service (that one bills API use).
-**The clock is not switched on yet.** It uses Sean's plan, so that's his call.
+Sean switched it on on 25 Nov 2026: the scheduled task "Heartbeat pulse (The
+Nearest Now)", separate from the calendar check-in also named "Heartbeat". If
+the server ever stops a run because the plan needs usage credits, it turns the
+task off rather than charging; nothing is billed, but the clock is stopped.
 
 **Where saves and journals live.** `heartbeat/data/` in this repo: Claude Code
 reads it directly, the log and archive are append-only (the same GitHub check as
