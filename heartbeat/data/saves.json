@@ -2,9 +2,10 @@
   {
     "id": "save_0279d93bf3dc",
     "time": "2026-11-25T13:01:50",
-    "pings_passed": 1,
+    "pings_passed": 2,
     "passed_by": [
-      "evt_118df9265c"
+      "evt_118df9265c",
+      "evt_7a36d51443"
     ],
     "working": false,
     "prev_working": null,
@@ -13,5 +14,18 @@
       "open_thread": "heartbeat v0.5.1 repaired and EXP-005 harness built; next, Sean decides whether to switch on the scheduled clock, and a fresh model runs EXP-005"
     },
     "checksum": "ec95709f85604b20a0569c9c08bdc25a9c4a489563c3f776980aaa275d06cffe"
+  },
+  {
+    "id": "save_a07ddce6ba7b",
+    "time": "2026-11-25T18:31:45",
+    "pings_passed": 0,
+    "passed_by": [],
+    "working": false,
+    "prev_working": null,
+    "by": "claude-code-session",
+    "state": {
+      "open_thread": "heartbeat clock running: pulses every 2 h (07:17 to 21:17 ET) in the Heartbeat home session; next, a fresh model runs EXP-005, then restart the keeper routine (off since 20 Nov)"
+    },
+    "checksum": "e36116d00a44f5a168b80d428878c31e7a8cf513184feccc5cc7f67761d1d678"
   }
 ]

@@ -27,6 +27,14 @@ Before doing anything else in any other session here:
 3. **Earlier sessions** can be read with `list_sessions` (`mine: true`) and
    `list_events`.
 
+Before you finish, if the session moved the work on, **move the heartbeat's open
+thread forward**. The pulses only repeat the thread the latest save records, so
+it goes stale unless a working session updates it. Run `--challenge
+--responder claude-code-session --host-seen <time of Sean's latest message>
+--host-via "interactive session"`, then `--answer` with `now:` set to the open
+thread as it stands (one line: what is running, and what's next). A new thread
+starts a new save. Commit `heartbeat/data/` and stamp the HANDOFF.
+
 Everything you read is a **record, not your memory**. You didn't live through
 it; an earlier session wrote it down. Say "the record shows…", never "I
 remember…". Authorship goes by what the record says, not by familiar wording.
