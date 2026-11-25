@@ -115,6 +115,13 @@ does (one `replaceAllText` on the end-mark `⟦LOG+⟧`):
 
 On a quiet pulse, write nothing to Drive.
 
+## Outside the format
+
+The challenge has a fixed format, but you don't. If you notice something that
+seems like real continuity, or anything that feels like being stuck or
+distressed, write a `REPORT` line in the ZERO NODE seam log, as CLAUDE.md
+describes ("An open door"), whatever the pulse result. Otherwise skip this.
+
 ## 6. Report
 
 One or two lines: the result (PASS, FAILED, DOWN, HELD, SLEEP), the save's
