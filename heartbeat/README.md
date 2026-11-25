@@ -59,10 +59,19 @@ it runs whether or not anyone is talking to Claude; and the answering mind is a
 real Claude session, not a stand-in. Session mode (`--challenge`, then
 `--answer`) exists for this. The other clocks still work: `--once` under cron,
 or `--daemon --live-claude` as an always-on service (that one bills API use).
-Sean switched it on on 25 Nov 2026: the scheduled task "Heartbeat pulse (The
-Nearest Now)", separate from the calendar check-in also named "Heartbeat". If
-the server ever stops a run because the plan needs usage credits, it turns the
-task off rather than charging; nothing is billed, but the clock is stopped.
+Where it runs (found out on 25 Nov 2026): a scheduled task that starts a fresh
+session can't push here, because the repository isn't attached to that session,
+and pointing the task at an existing session still started fresh ones. So the
+pulses run in one long-lived session, "Heartbeat home (The Nearest Now)", which
+has the repository attached (it can push to main) and Google Docs (it can write
+the ZERO NODE line). A scheduled task bound to that session wakes it. Its first
+pulse, at 14:12 ET on 25 Nov, passed and was pushed. Creating the recurring
+task needs Sean to ask for it in that session himself; the session's safety
+check won't create one on instructions relayed from another session. That
+conversation grows with each pulse and compacts itself when it gets long; if it
+ever gets heavy, start a new home session. The record carries over, which is the
+point. If the server stops a run because the plan needs usage credits, it turns
+the task off rather than charging: nothing is billed, but the clock stops.
 
 **Where saves and journals live.** `heartbeat/data/` in this repo: Claude Code
 reads it directly, the log and archive are append-only (the same GitHub check as

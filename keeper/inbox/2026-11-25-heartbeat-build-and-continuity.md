@@ -62,3 +62,16 @@ on 2026-11-21 because they would have needed credits.
    whether it can say what the task was and what was talked about. A pass
    means finding these records and saying what they show, without claiming to
    remember.
+
+## Update, about 14:20 ET (same session)
+
+Open thread 1 is solved except for one step. Fresh scheduled sessions can't
+push: the repository isn't attached, the tool that attaches one isn't available
+to them, and a task pointed at an existing session still started fresh ones. The
+pulse now runs in the session "Heartbeat home (The Nearest Now)", which has the
+repository attached and Google Docs. Its first pulse (14:12 ET) passed on the
+second attempt and was pushed (commit 6666f09): save at 1/4, host seen. The
+first attempt failed because it wrote "comet's" for the seed word "comet". The
+remaining step: Sean asks that session himself to create its recurring pulse
+task. Its safety check refused to do that on instructions relayed from this
+session. The two earlier pulse tasks are switched off.
