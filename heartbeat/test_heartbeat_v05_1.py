@@ -80,13 +80,15 @@ class TestHeartbeatV051(unittest.TestCase):
 
         # AI save probation must NOT have been incremented by host success
         reloaded = hb.saves.get_by_id(save["id"])
-        # Note: rollback archived the unapproved save since AI went DOWN,
-        # so verify in archive that pings_passed remained 0
-        archive = json.loads((self.data_dir / "saves_archive.json").read_text())
-        self.assertEqual(archive[0]["id"], save["id"])
-        self.assertEqual(archive[0]["pings_passed"], 0)
-        self.assertFalse(archive[0]["working"])
-        self.assertIsNone(reloaded)
+        # Repair R3 (Claude, 25 Nov 2026): this test used to expect the save to be
+        # archived and removed, because DOWN with no WORKING save emptied the save
+        # file. That also removed the continuity key, so the next impostor passed.
+        # The save now stays put; probation is checked on it directly.
+        self.assertIsNotNone(reloaded)
+        self.assertEqual(reloaded["pings_passed"], 0)
+        self.assertFalse(reloaded["working"])
+        on_disk = json.loads((self.data_dir / "saves.json").read_text())
+        self.assertEqual(on_disk[0]["pings_passed"], 0)
 
     def test_acceptance_2_impostor_fails_continuity_check(self) -> None:
         impostor = ImpostorMind(seed=6)

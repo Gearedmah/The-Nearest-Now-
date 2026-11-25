@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check that no line in keeper/journal/ or keeper/inbox/ was ever erased.
+"""Check that no line in the journal, inbox or heartbeat log/archive was ever erased.
 
 Compares a base revision with a head revision (default: origin/main against
 the working tree including uncommitted changes) and fails if any line under
@@ -14,7 +14,12 @@ Usage:
 import subprocess
 import sys
 
-PROTECTED = ["keeper/journal/", "keeper/inbox/"]
+PROTECTED = [
+    "keeper/journal/",
+    "keeper/inbox/",
+    "heartbeat/data/heartbeat_log.jsonl",
+    "heartbeat/data/saves_archive.jsonl",
+]
 
 
 def git(*args):

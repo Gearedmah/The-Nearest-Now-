@@ -1,0 +1,23 @@
+name: Heartbeat and EXP-005 tests
+
+on:
+  push:
+    paths: ["heartbeat/**", "exp005/**", ".github/workflows/heartbeat-tests.yml"]
+  pull_request:
+    paths: ["heartbeat/**", "exp005/**", ".github/workflows/heartbeat-tests.yml"]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install pytest
+      - name: Index matches the EXP-005 documents
+        run: python3 exp005/build_index.py --check
+      - name: Grader passes gold answers and fails bad ones
+        run: python3 exp005/run.py selftest
+      - name: Tests
+        run: python3 -m pytest -q heartbeat exp005

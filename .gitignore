@@ -1,0 +1,4 @@
+__pycache__/
+.pytest_cache/
+heartbeat/data/pending_challenge.json
+heartbeat/data/*.tmp

@@ -1,10 +1,10 @@
-name: Keeper journal is append-only
+name: Journal and heartbeat log are append-only
 
 on:
   push:
-    paths: ["keeper/journal/**", "keeper/inbox/**"]
+    paths: ["keeper/journal/**", "keeper/inbox/**", "heartbeat/data/**"]
   pull_request:
-    paths: ["keeper/journal/**", "keeper/inbox/**"]
+    paths: ["keeper/journal/**", "keeper/inbox/**", "heartbeat/data/**"]
 
 jobs:
   check:
