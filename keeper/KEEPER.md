@@ -37,7 +37,9 @@ has an entry headed with today's date, stop and change nothing.
 5. **Fallback entries** in this repo's `keeper/journal/` that are not yet in
    the Drive doc: copy them in (as new lines, marked "copied from GitHub
    fallback") before writing today's.
-6. **The heartbeat**, if `heartbeat/data/` exists: run
+6. **The patterns list**, `keeper/journal/patterns.md`: every pattern's newest
+   line, and any `change` whose check-by date is today or earlier.
+7. **The heartbeat**, if `heartbeat/data/` exists: run
    `python3 heartbeat/heartbeat_v05_1.py --status`. Note any DOWN, restore or
    standby since the last entry. If it lists open spot-checks, you are the
    default second mind: read the four pings each one names (in
@@ -69,6 +71,18 @@ Follow the entry form in the keeper doc's top box, in this order:
   / can't tell yet, with the evidence.
 - **Corrections:** cite the old item, give the corrected line. Never edit the
   old one. "None." if none.
+- **Patterns:** the self-check across days (see `keeper/journal/patterns.md`).
+  For each thing in today's inner voice, ask: has this happened before? Look
+  back through earlier entries, not only the list.
+  - It matches a pattern or candidate: cite it (`PAT-n`) and add a line, seen
+    again, with today's evidence. A candidate seen again on a different day
+    becomes a **pattern**: propose **keep** or **change**, and say why.
+  - A `change` is due for checking: say **held** or **slipped**, with evidence.
+  - Something new you'd want to catch if it happened again: add it as a
+    **candidate**.
+  Append these lines to `patterns.md` (never edit an old line) and name them
+  in the entry. "No pattern lines today." is a fine answer; a list that grows
+  every day isn't selecting.
 - **TALLY:** catches today (Sean / Claude) and the running count. A catch made
   by this entry itself, before Sean, counts for Claude.
 - **Observer or diary?:** one or two honest sentences. Don't claim an answer
@@ -91,6 +105,11 @@ line saying it is a fallback because Drive was unreachable. Run
 (`keeper: fallback entry YYYY-MM-DD`), and push it to `main`. The next run with
 Drive copies it in. The GitHub copy is public: no personal details, contact
 information or secrets.
+
+**Pattern lines, either way:** if you appended to `keeper/journal/patterns.md`,
+run `python3 keeper/tools/check_append_only.py`, commit that file too
+(`keeper: patterns YYYY-MM-DD`, or in the same commit as a fallback entry) and
+push it to `main`. The patterns list lives only in the repo.
 
 ## 5. Report
 

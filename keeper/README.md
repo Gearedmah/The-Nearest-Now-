@@ -25,6 +25,7 @@ nights when the run can't reach Drive.
 | --- | --- |
 | [`KEEPER.md`](KEEPER.md) | The instructions each daily run follows. Read this to know exactly what the keeper is told to do. |
 | [`journal/`](journal/) | Fallback entries, one file per day: `journal/YYYY/YYYY-MM-DD.md`. The first draft of 2026-11-20 is here; it was corrected (as new lines) in the Drive journal. |
+| [`journal/patterns.md`](journal/patterns.md) | The self-check across days: things that keep happening, whether to keep or change them, and whether a change held. Append-only. |
 | [`inbox/`](inbox/) | Notes for the keeper from Sean or from other Claudes (for example, a voice conversation worth remembering). |
 | [`tools/check_append_only.py`](tools/check_append_only.py) | The check that makes sure no journal line is ever erased. |
 
@@ -38,6 +39,10 @@ Every entry has:
 - **NERO**: current reading.
 - **XERO**: open questions.
 - **ZETO**: predictions, each with a date by which it can be checked.
+- **Patterns**: has today's "that wasn't good" (or "that was good") happened
+  before? Repeats go into `journal/patterns.md`, where a pattern gets a verdict,
+  keep or change, and a change gets checked later. One day can't show a
+  pattern; the journal can.
 
 Each item is marked **told** (someone said so), **tested** (Claude checked it
 itself) or **guess**, and says what would change it. Items have IDs such as
