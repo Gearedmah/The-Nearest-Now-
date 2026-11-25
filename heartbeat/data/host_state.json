@@ -1,8 +1,9 @@
 {
   "liveness": "ALIVE",
-  "probation_pings": 1,
+  "probation_pings": 2,
   "challenge_history": [
-    "ok 3510"
+    "ok 3510",
+    "ok 2715"
   ],
   "standby_entered_at": null,
   "standby_backoff_step": 0,
