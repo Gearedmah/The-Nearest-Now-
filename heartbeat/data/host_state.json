@@ -1,11 +1,12 @@
 {
   "liveness": "ALIVE",
-  "probation_pings": 4,
+  "probation_pings": 5,
   "challenge_history": [
     "ok 3510",
     "ok 2715",
     "ok 5903",
-    "ok 3060"
+    "ok 3060",
+    "ok 2248"
   ],
   "standby_entered_at": null,
   "standby_backoff_step": 0,
