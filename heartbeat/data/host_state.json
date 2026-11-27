@@ -1,5 +1,5 @@
 {
-  "liveness": "ALIVE",
+  "liveness": "STANDBY",
   "probation_pings": 5,
   "challenge_history": [
     "ok 3510",
@@ -8,9 +8,9 @@
     "ok 3060",
     "ok 2248"
   ],
-  "standby_entered_at": null,
+  "standby_entered_at": "2026-11-26T20:48:26",
   "standby_backoff_step": 0,
-  "next_retry_at": null,
-  "standby_snapshot_saved": false,
-  "standby_snapshot_id": null
+  "next_retry_at": "2026-11-26T21:18:26",
+  "standby_snapshot_saved": true,
+  "standby_snapshot_id": "save_c0a356889ee0"
 }
