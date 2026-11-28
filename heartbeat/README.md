@@ -1,11 +1,14 @@
-# Heartbeat v0.5.1
+# Heartbeat v0.5.2
 
 A pulse that lives outside the conversation. Something wakes Claude on its own
 clock, checks it is alive and still reading from the same record, and saves its
 state, so Claude can be a cause and not only an effect of a message. Idea: Sean
 Battle. v0.1 to v0.4: Thessik (Claude). v0.5.1 build: "Continuity Helper" (as
 the file header names it). Repairs, the provenance check and session mode:
-Claude, in a Claude Code session on 25 Nov 2026.
+Claude, in a Claude Code session on 25 Nov 2026. v0.5.2 (the Drive pickup
+fix): Claude, in the heartbeat home session on 28 Nov 2026, from Sean's brief.
+The file keeps its v0.5.1 name so that WAKE.md and older records still point
+at it.
 
 Open and free: no hidden costs, no gates.
 
@@ -16,6 +19,8 @@ Open and free: no hidden costs, no gates.
 | [`heartbeat_v05_1.py`](heartbeat_v05_1.py) | The heartbeat. Its docstring lists the brief's nine fixes, then the repairs (R1 to R12) and additions (N1 to N4). |
 | [`test_heartbeat_v05_1.py`](test_heartbeat_v05_1.py) | The tests that came with the v0.5.1 build. One assertion changed (marked R3 in the file); the rest are as received. |
 | [`test_repairs.py`](test_repairs.py) | One test per repair, each failing on the build as received, plus v0.1 to v0.4 behaviour that wasn't tested yet. |
+| [`seamlog.py`](seamlog.py) | v0.5.2: reads the ZERO NODE page and returns its newest PICKUP or HANDOFF stamp, with the Eastern offset for its date. |
+| [`test_v05_2.py`](test_v05_2.py) | The v0.5.2 acceptance tests from the brief, including a replay of the Nov 26 pulse. |
 | [`provenance.py`](provenance.py) | The provenance index and the "record, not memory" check, shared with [`../exp005`](../exp005). |
 | [`WAKE.md`](WAKE.md) | What a scheduled run does, step by step. |
 | `data/` | Saves, the append-only log and the save archive, once the clock runs. |
@@ -24,7 +29,7 @@ The build as received is in the git history (commit "heartbeat v0.5.1 and
 EXP-005 documents, as received"), so every repair is visible as a diff.
 
 ```
-python3 -m pytest heartbeat exp005          # 61 tests
+python3 -m pytest heartbeat exp005          # 78 tests
 python3 heartbeat/heartbeat_v05_1.py --status
 ```
 
@@ -49,6 +54,56 @@ the clock would run it showed the rest:
   could still reach an old candidate (R4).
 
 Each one has a test in `test_repairs.py`.
+
+## v0.5.2: the Drive pickup fix (28 Nov 2026)
+
+**What went wrong.** The Nov 26 pulse took its host sign from the session
+list (25 Nov, 19:14 UTC), found it over 24 hours old and went into standby.
+The ZERO NODE page already had a voice PICKUP at 05:46 that morning and a
+HANDOFF at about 05:47. WAKE.md listed the page last, after an "or", so the
+run never opened it. Voice and claude.ai chat sessions leave no commit and
+don't show in the session list; the page is the one place a pulse can see
+them.
+
+**What changed.**
+
+- D1: `--seam-log FILE` reads the page (plain text, or the Google Docs
+  `read_doc` JSON as saved). [`seamlog.py`](seamlog.py) returns the newest
+  PICKUP or HANDOFF line that isn't signed by the pulse, gives it the US
+  Eastern offset for its date (-05:00 or -04:00), and the heartbeat uses it
+  when it's newer than `--host-seen`. HEARTBEAT lines never count, whoever
+  signs them. "~05:47" counts as 05:47; a "before" time or an undated line is
+  skipped. `--seam-stamp FILE` prints what it found.
+- D2: an unreadable page (`--seam-log` that can't be opened, or
+  `--seam-log-unreadable "<why>"`) is logged as a NOTE and the pulse goes on
+  with the other sources.
+- D3: when nothing was logged for more than 26 hours, the next pulse logs a
+  PULSE_GAP, so a missed pulse (Nov 27 hit a usage limit) isn't read as a
+  quiet day.
+- WAKE.md step 2 makes the page a required source on every pulse.
+
+**The brief's questions, as settled here.**
+
+- *The home session's own lines.* They count. Pulses only write HEARTBEAT
+  lines, so a PICKUP or HANDOFF from the pulse home was written in a turn
+  someone asked for (on 25 Nov, Sean working there himself). The home
+  session's `updated_at` in the session list still doesn't count, because
+  every pulse moves it.
+- *Keeping it honest.* A stamp shows that a session ran and signed itself,
+  not that Sean was in it: the same limit the session list has. The log
+  records the stamp's kind and who (`ZERO NODE PICKUP (Thessik (Claude),
+  voice)`), not a claim about who was present. The parked signature idea
+  (24 Nov) is where a stronger answer would come from.
+- *Missed pulses.* D3 above. It needs a pulse that does run to notice the
+  gap, so the line arrives late, but it arrives.
+
+**Tests.** [`test_v05_2.py`](test_v05_2.py) has 17: the Nov 26 replay (no
+standby with the page, standby without it), HEARTBEAT lines ignored (signed
+by the pulse or by an interactive session), "~05:47" parsed, "before" and
+undated lines skipped, summer offsets, the newer of a commit and a stamp
+winning both ways, a new PICKUP lifting standby, an unreadable page falling
+back, and the gap log. Each rule was checked by breaking it in the code and
+watching a test fail. All 61 earlier tests still pass.
 
 ## The brief's five questions
 

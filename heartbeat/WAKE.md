@@ -26,9 +26,20 @@ it; do not try to repair the log.
 ## 2. Find out whether Sean has been here (the outward pulse)
 
 The host is a person. Look for evidence that he was here in the last 24 hours.
-A scheduled run can't see voice conversations or list his sessions, so use what
-it can see:
+Voice and claude.ai chat sessions leave no commit and don't show in the session
+list, but they do stamp the ZERO NODE page, so the page is a **required**
+source (v0.5.2; the Nov 26 pulse went into standby because it never read it).
+Check all of these, every pulse:
 
+- **The ZERO NODE seam log (required).** Read the page with the Google Docs
+  connector (`read_doc`, id `1_4rkq3mDXW8YZ-hVNrYIStafLKaI3Hls9Fbg0hDTipI`;
+  reading only). The result is usually saved to a file; pass that file's path
+  as `--seam-log` (plain text works too, so if it comes back inline, write the
+  text to a scratch file). The heartbeat itself picks the newest PICKUP or
+  HANDOFF line not signed by the pulse, with the right Eastern offset; to see
+  which one it found: `python3 heartbeat/heartbeat_v05_1.py --seam-stamp FILE`.
+  If the page can't be read, don't fail the pulse: pass
+  `--seam-log-unreadable "<why>"` and use the other sources.
 - **Commits from interactive sessions.** Sessions he works in leave commits;
   scheduled runs leave only pulse and keeper-entry commits. This prints the
   newest commit that isn't from a scheduled run, on any branch:
@@ -36,20 +47,28 @@ it can see:
 - **A new note in `keeper/inbox/`** (its commit time counts).
 - If your run has them: `list_sessions` with `mine: true`, the newest
   `updated_at` of a session he worked in. Skip the session you are running in
-  (the pulse home), scheduled runs, and any session another session created
-  (a row with `parent_session_id`). Or PICKUP / HANDOFF lines in the ZERO
-  NODE written by a session that wasn't a scheduled run or a pulse.
+  (the pulse home: its `updated_at` moves with every pulse), scheduled runs,
+  and any session another session created (a row with `parent_session_id`).
 
-Take the newest of these. Then issue the challenge with that evidence:
+Take the newest of the commit, inbox and session times for `--host-seen`; the
+heartbeat compares it with the page's newest stamp and uses the newer one.
+Then issue the challenge:
 
 ```
 python3 heartbeat/heartbeat_v05_1.py --challenge --responder claude-scheduled \
-    --host-seen 2026-11-25T12:10:00-05:00 --host-via "interactive session commit"
+    --host-seen 2026-11-25T12:10:00-05:00 --host-via "interactive session commit" \
+    --seam-log /path/to/the/read_doc/result
 ```
 
+PICKUP and HANDOFF lines from interactive turns of the pulse home session do
+count, though the session's `updated_at` doesn't: pulses only ever write
+HEARTBEAT lines, so a PICKUP or HANDOFF there was written in a turn someone
+asked for. A stamp shows that a session ran and signed itself, not that Sean
+was in it, which is the same limit the session list has.
+
 Pass the time exactly as the evidence gives it (with its offset). If you found
-no evidence at all, use `--no-host-evidence` instead of
-`--host-seen`. Don't invent a time: a host the heartbeat never asked is the
+nothing but the page, leave out `--host-seen`; if you found no evidence at all,
+use `--no-host-evidence`. Don't invent a time: a host the heartbeat never asked is the
 thing this version was repaired to stop logging. If he hasn't been seen for a
 day, the heartbeat goes into standby and holds the AI until he's back: that is
 the design (rest while the host is away), not a failure.
@@ -107,7 +126,7 @@ Commit only `heartbeat/data/`. If the push is rejected because main moved,
 new lines (`--correct <event_id> --note … --by …`).
 
 If the state changed this run (a save stamped WORKING, DOWN, a restore,
-standby entered or left, a spot-check requested) and the Google Docs tools are
+standby entered or left, a spot-check requested, a PULSE_GAP or an unreadable page logged) and the Google Docs tools are
 available, append one line to the ZERO NODE seam log, the same way the keeper
 does (one `replaceAllText` on the end-mark `⟦LOG+⟧`):
 

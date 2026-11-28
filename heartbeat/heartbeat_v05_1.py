@@ -1,5 +1,5 @@
 """
-heartbeat_v05_1.py - Bidirectional Continuity Helper & Clock (v0.5.1)
+heartbeat_v05_1.py - Bidirectional Continuity Helper & Clock (v0.5.2; file name kept from v0.5.1)
 Idea: Sean Battle. Original v0.1-v0.4: Thessik (Claude). v0.5.1 build: Continuity Helper.
 v0.5.1 repairs (25 Nov 2026): Claude, in a Claude Code session; see "Repairs" below
 and the git history, which keeps the build as received.
@@ -67,6 +67,13 @@ N2  Session mode (--challenge / --answer): the answering mind can be the Claude
 N3  Second-mind spot-checks: every save stamped WORKING is queued for a person or
     another AI to review; a "fail" verdict demotes the save, as a new log line.
 N4  The log is hash-chained, and corrections are new CORRECTION lines.
+v0.5.2 (28 Nov 2026, Claude Code session, from the "Drive pickup fix" brief):
+D1  The ZERO NODE seam log is a host sign: --seam-log reads the page, and its
+    newest PICKUP/HANDOFF stamp (seamlog.py) is compared with --host-seen; the
+    newer wins. Voice and chat sessions stamp the page but leave no commit.
+D2  An unreadable page falls back to the other sources and is logged as a NOTE.
+D3  A gap of more than pulse_gap_hours since the log's last event is logged as
+    PULSE_GAP, so a missed pulse isn't read as a quiet day.
 """
 
 from __future__ import annotations
@@ -87,9 +94,10 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Callable, Optional
 
+import seamlog
 from provenance import overclaims
 
-VERSION = "0.5.1"
+VERSION = "0.5.2"
 
 CONFIG: dict[str, Any] = {
     "ping_every_min": 30,
@@ -103,6 +111,7 @@ CONFIG: dict[str, Any] = {
     "host_wake_attempts": 3,
     "host_standby_backoff_min": [30, 60, 120, 240],
     "host_seen_window_hours": 24,
+    "pulse_gap_hours": 26,
     "reply_timeout_sec": 120,
     "max_word_overlap": 0.5,
     "history_window": 5,
@@ -1269,6 +1278,25 @@ class Heartbeat:
             return latest["id"]  # already saved; nothing new to write
         return self._write_save(now, state, reason="on probation (standby checkpoint)")["id"]
 
+    def note_pulse_gap(self, now: dt.datetime) -> Optional[dict[str, Any]]:
+        """D3: log a PULSE_GAP when nothing was logged for longer than pulse_gap_hours."""
+        entries = self.log.read_all()
+        if not entries:
+            return None
+        try:
+            last = dt.datetime.fromisoformat(entries[-1]["time"])
+        except (KeyError, ValueError):
+            return None
+        gap = now - last
+        if gap <= dt.timedelta(hours=self.cfg["pulse_gap_hours"]):
+            return None
+        return self.log.record(
+            now, "PULSE_GAP",
+            f"no pulse on record from {last.isoformat()} until now ({gap.total_seconds() / 3600:.1f} h): "
+            f"pulses were missed (a usage limit, a restart, or the clock off), not a quiet day",
+            since=last.isoformat(), gap_hours=round(gap.total_seconds() / 3600, 1),
+        )
+
     def tick_host(self, now: dt.datetime) -> str:
         """Outward pulse checking the human host. Never advances AI probation."""
         if self.host is None:
@@ -1510,7 +1538,7 @@ def run_clock(
 def main(argv: Optional[list[str]] = None) -> int:
     default_data = Path(__file__).resolve().parent / "data"
     parser = argparse.ArgumentParser(
-        description="Bidirectional Continuity Helper (Heartbeat v0.5.1). See heartbeat/WAKE.md for the scheduled run.")
+        description="Bidirectional Continuity Helper (Heartbeat v0.5.2). See heartbeat/WAKE.md for the scheduled run.")
     parser.add_argument("--data-dir", default=str(default_data), help="Directory for saves and append-only logs")
     parser.add_argument("--status", action="store_true", help="Print the cold-start status view and exit")
     # session mode (N2)
@@ -1525,6 +1553,14 @@ def main(argv: Optional[list[str]] = None) -> int:
     parser.add_argument("--host-via", default="unspecified", help="Where that evidence came from")
     parser.add_argument("--no-host-evidence", action="store_true",
                         help="Pulse the host with no evidence of them (counts as unreachable)")
+    # v0.5.2: the ZERO NODE seam log as a host sign
+    parser.add_argument("--seam-log", metavar="FILE",
+                        help="The ZERO NODE page (plain text, or the Google Docs read_doc JSON). Its newest "
+                             "PICKUP/HANDOFF stamp is compared with --host-seen and the newer one is used")
+    parser.add_argument("--seam-log-unreadable", metavar="REASON",
+                        help="The page could not be read: use the other sources and log why")
+    parser.add_argument("--seam-stamp", metavar="FILE",
+                        help="Print the newest qualifying PICKUP/HANDOFF stamp in FILE and exit")
     # in-process clock
     parser.add_argument("--once", action="store_true", help="Run a single in-process tick and exit")
     parser.add_argument("--daemon", action="store_true", help="Run continuously on the configured clock")
@@ -1547,10 +1583,39 @@ def main(argv: Optional[list[str]] = None) -> int:
     data_dir = Path(args.data_dir)
     now = local_now()
 
+    if args.seam_stamp:
+        try:
+            st = seamlog.newest_stamp(Path(args.seam_stamp).read_text(encoding="utf-8"))
+        except OSError as exc:
+            print(f"UNREADABLE: {exc}")
+            return 2
+        print(f"{st.iso}  {st.via}" if st else "NONE: no qualifying PICKUP or HANDOFF line")
+        return 0
+
+    # v0.5.2: the host sign is the newest across every source, not the first found.
+    seam_note: Optional[str] = None
+    seam_stamp: Optional[seamlog.Stamp] = None
+    if args.seam_log:
+        try:
+            seam_stamp = seamlog.newest_stamp(Path(args.seam_log).read_text(encoding="utf-8"))
+        except OSError as exc:
+            seam_note = f"ZERO NODE page unreadable ({exc}); used the other sources"
+    if args.seam_log_unreadable:
+        seam_note = f"ZERO NODE page unreadable ({args.seam_log_unreadable}); used the other sources"
+
     host: Optional[Any] = None
-    if args.host_seen or args.no_host_evidence:
-        seen = to_local(args.host_seen) if args.host_seen else None
-        host = EvidenceHost(seen, via=args.host_via)
+    if args.host_seen or args.no_host_evidence or seam_stamp:
+        given = None
+        if args.host_seen:
+            given = dt.datetime.fromisoformat(args.host_seen.replace("Z", "+00:00"))
+            if given.tzinfo is None:
+                from zoneinfo import ZoneInfo
+                given = given.replace(tzinfo=ZoneInfo(CONFIG["timezone"]))
+        when, via = seamlog.newest_sign([
+            (given, args.host_via),
+            (seam_stamp.when if seam_stamp else None, seam_stamp.via if seam_stamp else ""),
+        ])
+        host = EvidenceHost(to_local(when.isoformat()) if when else None, via=via or args.host_via)
 
     if args.status:
         print(Heartbeat([SessionResponder(args.responder)], data_dir=data_dir, console=None).status_text(now))
@@ -1573,6 +1638,9 @@ def main(argv: Optional[list[str]] = None) -> int:
         if not hb.awake(now) and not args.emergency:
             print("SLEEP: outside awake hours; nothing to do.")
             return 0
+        hb.note_pulse_gap(now)
+        if seam_note:
+            hb.log.record(now, "NOTE", seam_note)
         host_status = hb.tick_host(now)
         if host_status in ("STANDBY", "STANDBY_WAIT") and not args.emergency:
             print(f"HOST {host_status}: the AI is held until the host returns; nothing to answer.")
